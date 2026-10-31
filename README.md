@@ -49,6 +49,10 @@ The seed command creates `demo` with password `DemoPass123!` and three events. U
 flask --app app run
 ```
 
+The app is assembled in `app.py`; authentication and event endpoints are
+registered as separate Flask blueprints, with shared validation helpers kept
+in their own modules.
+
 The API listens on `http://127.0.0.1:5000`. Browser clients must send requests with credentials enabled so the session cookie is included. Cookies are HTTP-only and use `SameSite=Lax`; set `COOKIE_SECURE=true` when serving the API over HTTPS.
 
 For a browser frontend on another origin, the default allowed origin is `http://localhost:3000`. Set `CORS_ORIGINS` to a comma-separated list of trusted origins to change it; credentialed requests are enabled only for those origins.
@@ -75,6 +79,7 @@ Every event endpoint requires an authenticated session. Events are scoped to the
 |---|---|---|
 | `GET` | `/events?page=1&per_page=10` | List the current user's events, ordered by ID. `per_page` must be between 1 and 100. |
 | `POST` | `/events` | Create an event. Requires a non-empty `title`; `description` is optional. |
+| `GET` | `/events/<id>` | Retrieve one event owned by the current user. |
 | `PATCH` | `/events/<id>` | Update the event's `title` and/or `description`. |
 | `DELETE` | `/events/<id>` | Delete an owned event; returns `204` on success. |
 
